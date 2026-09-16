@@ -806,6 +806,27 @@
       };
       const total = articles.reduce((s, l) => s + l.prix * l.quantite, 0);
 
+      // Ouvrir WhatsApp tout de suite (avant l'enregistrement) pour eviter le blocage popup du navigateur
+      const parVendeur = {};
+      articles.forEach((l) => {
+        const cle = l.whatsappVendeur || "inconnu";
+        if (!parVendeur[cle]) parVendeur[cle] = { nomVendeur: l.nomVendeur, articles: [] };
+        parVendeur[cle].articles.push(l);
+      });
+
+      Object.entries(parVendeur).forEach(([whatsapp, groupe]) => {
+        if (whatsapp === "inconnu") return;
+        const recap = groupe.articles.map((l) => `- ${l.quantite}x ${l.nom} (${formatFCFA(l.prix)})`).join("\n");
+        const sousTotal = groupe.articles.reduce((s, l) => s + l.prix * l.quantite, 0);
+        const message =
+          `Nouvelle commande Éclat by Mamofa\n` +
+          `Client: ${client.nom} (${client.telephone})\n` +
+          `Livraison: ${client.adresse}, ${client.ville}\n\n` +
+          `Articles:\n${recap}\n\n` +
+          `Sous-total: ${formatFCFA(sousTotal)}`;
+        window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`, "_blank");
+      });
+
       try {
         const vendeurIds = [...new Set(articles.map((a) => a.vendeurId).filter(Boolean))];
 
@@ -816,26 +837,6 @@
           vendeurIds,
           statut: "en attente",
           dateCommande: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-
-        const parVendeur = {};
-        articles.forEach((l) => {
-          const cle = l.whatsappVendeur || "inconnu";
-          if (!parVendeur[cle]) parVendeur[cle] = { nomVendeur: l.nomVendeur, articles: [] };
-          parVendeur[cle].articles.push(l);
-        });
-
-        Object.entries(parVendeur).forEach(([whatsapp, groupe]) => {
-          if (whatsapp === "inconnu") return;
-          const recap = groupe.articles.map((l) => `- ${l.quantite}x ${l.nom} (${formatFCFA(l.prix)})`).join("\n");
-          const sousTotal = groupe.articles.reduce((s, l) => s + l.prix * l.quantite, 0);
-          const message =
-            `Nouvelle commande Éclat by Mamofa\n` +
-            `Client: ${client.nom} (${client.telephone})\n` +
-            `Livraison: ${client.adresse}, ${client.ville}\n\n` +
-            `Articles:\n${recap}\n\n` +
-            `Sous-total: ${formatFCFA(sousTotal)}`;
-          window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`, "_blank");
         });
 
         if (!articlesACommander) {
