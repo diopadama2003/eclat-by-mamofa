@@ -15,7 +15,20 @@
     .conteneur { max-width: 420px; margin: 40px auto; background: white; padding: 24px; border-radius: 10px; border: 1px solid #ddd; }
     h2 { margin-top: 0; }
     label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 14px; }
-    input { width: 100%; padding: 9px; margin-top: 4px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem; }
+    input, select { width: 100%; padding: 9px; margin-top: 4px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem; }
+    .ligne-tel {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .ligne-tel select {
+      width: 130px;
+      flex-shrink: 0;
+      margin-top: 0;
+    }
+    .ligne-tel input {
+      margin-top: 0;
+    }
     button { width: 100%; background: #16213E; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 6px; }
     .lien-bascule { text-align: center; margin-top: 14px; font-size: 0.9rem; }
     .lien-bascule a { color: #D6336C; cursor: pointer; text-decoration: underline; }
@@ -46,8 +59,41 @@
         <label>Mot de passe (6 caractères minimum)
           <input type="password" name="motdepasse" required minlength="6">
         </label>
-        <label>Numéro WhatsApp (avec indicatif pays, ex: 221771234567)
-          <input type="text" name="whatsapp" required placeholder="221771234567">
+        <label>Numéro WhatsApp
+          <div class="ligne-tel">
+            <select name="indicatif" required>
+              <option value="221" selected>🇸🇳 +221 Sénégal</option>
+              <option value="33">🇫🇷 +33 France</option>
+              <option value="1">🇺🇸 +1 USA / Canada</option>
+              <option value="44">🇬🇧 +44 Royaume-Uni</option>
+              <option value="32">🇧🇪 +32 Belgique</option>
+              <option value="34">🇪🇸 +34 Espagne</option>
+              <option value="39">🇮🇹 +39 Italie</option>
+              <option value="49">🇩🇪 +49 Allemagne</option>
+              <option value="212">🇲🇦 +212 Maroc</option>
+              <option value="213">🇩🇿 +213 Algérie</option>
+              <option value="216">🇹🇳 +216 Tunisie</option>
+              <option value="223">🇲🇱 +223 Mali</option>
+              <option value="224">🇬🇳 +224 Guinée</option>
+              <option value="225">🇨🇮 +225 Côte d'Ivoire</option>
+              <option value="226">🇧🇫 +226 Burkina Faso</option>
+              <option value="227">🇳🇪 +227 Niger</option>
+              <option value="228">🇹🇬 +228 Togo</option>
+              <option value="229">🇧🇯 +229 Bénin</option>
+              <option value="230">🇲🇺 +230 Maurice</option>
+              <option value="233">🇬🇭 +233 Ghana</option>
+              <option value="234">🇳🇬 +234 Nigeria</option>
+              <option value="237">🇨🇲 +237 Cameroun</option>
+              <option value="241">🇬🇦 +241 Gabon</option>
+              <option value="242">🇨🇬 +242 Congo</option>
+              <option value="243">🇨🇩 +243 RD Congo</option>
+              <option value="971">🇦🇪 +971 Émirats Arabes Unis</option>
+              <option value="966">🇸🇦 +966 Arabie Saoudite</option>
+              <option value="86">🇨🇳 +86 Chine</option>
+              <option value="91">🇮🇳 +91 Inde</option>
+            </select>
+            <input type="tel" name="telephoneNombre" placeholder="77 000 00 00" required>
+          </div>
         </label>
         <button type="submit">Créer mon compte vendeur</button>
       </form>
@@ -99,13 +145,17 @@
       messageEl.style.color = "#222";
       messageEl.textContent = "Création du compte...";
 
+      // Nettoyer le numéro (enlever espaces, tirets, et le 0 initial) et le combiner avec l'indicatif
+      const chiffres = form.telephoneNombre.value.replace(/\D/g, "").replace(/^0+/, "");
+      const whatsappComplet = form.indicatif.value + chiffres;
+
       try {
         const resultat = await auth.createUserWithEmailAndPassword(form.email.value, form.motdepasse.value);
 
         await db.collection("vendeurs").doc(resultat.user.uid).set({
           nomVendeur: form.nomVendeur.value,
           email: form.email.value,
-          whatsapp: form.whatsapp.value,
+          whatsapp: whatsappComplet,
           statut: "en_attente",
           dateInscription: firebase.firestore.FieldValue.serverTimestamp(),
         });
@@ -115,7 +165,7 @@
         emailjs.send("service_wkkglfl", "template_oq5c5gr", {
           nom_vendeur: form.nomVendeur.value,
           email_vendeur: form.email.value,
-          whatsapp_vendeur: form.whatsapp.value,
+          whatsapp_vendeur: whatsappComplet,
           lien_accepter: lienAccepter,
         });
 
