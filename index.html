@@ -484,6 +484,100 @@
       z-index: 130;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
+
+    /* ===== Responsive mobile ===== */
+    @media (max-width: 600px) {
+      header {
+        flex-wrap: wrap;
+        padding: 10px 14px;
+        row-gap: 8px;
+      }
+      .logo-img {
+        height: 42px;
+      }
+      .header-droite {
+        width: 100%;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .nav-liens {
+        gap: 12px;
+      }
+      .nav-liens a {
+        font-size: 0.8rem;
+      }
+      header button {
+        padding: 7px 12px;
+        font-size: 0.82rem;
+        white-space: nowrap;
+      }
+
+      .hero {
+        padding: 32px 16px 28px;
+      }
+      .hero h1 {
+        font-size: 1.6rem;
+      }
+      .hero-sous-titre {
+        font-size: 0.9rem;
+      }
+      .hero p {
+        font-size: 0.9rem;
+      }
+
+      .toolbar {
+        padding: 16px 16px 0;
+      }
+
+      .grille-produits {
+        padding: 16px;
+        gap: 14px;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+      .carte-produit img {
+        height: 130px;
+      }
+      .carte-produit-info {
+        padding: 10px;
+      }
+      .boutons-produit {
+        flex-wrap: wrap;
+      }
+      .btn-commander-direct {
+        font-size: 0.78rem;
+        padding: 7px 8px;
+      }
+
+      .panneau-panier {
+        width: 100%;
+        right: -100%;
+        padding: 16px;
+      }
+
+      .ligne-tel {
+        flex-direction: column;
+      }
+      .ligne-tel select {
+        width: 100%;
+      }
+
+      .modal {
+        padding: 18px;
+      }
+
+      .modal-produit-img {
+        height: 42vh;
+      }
+      .modal-produit-corps {
+        padding: 16px 18px 24px;
+      }
+      .modal-produit-nom {
+        font-size: 1.1rem;
+      }
+      .modal-produit-prix {
+        font-size: 1.2rem;
+      }
+    }
   </style>
 </head>
 <body>
