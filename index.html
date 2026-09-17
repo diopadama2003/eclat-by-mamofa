@@ -383,6 +383,23 @@
       float: right;
     }
 
+    .ligne-tel {
+      display: flex;
+      gap: 8px;
+    }
+    .ligne-tel select {
+      width: 130px;
+      flex-shrink: 0;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+    .ligne-tel input {
+      flex: 1;
+      margin-top: 0;
+    }
+
     /* ===== Fiche produit plein ecran ===== */
     .modal-produit {
       top: 0;
@@ -526,7 +543,40 @@
         <input type="text" name="nom" required>
       </label>
       <label>Téléphone
-        <input type="tel" name="telephone" placeholder="ex: 221771234567" required>
+        <div class="ligne-tel">
+          <select name="indicatif" required>
+            <option value="221" selected>🇸🇳 +221 Sénégal</option>
+            <option value="33">🇫🇷 +33 France</option>
+            <option value="1">🇺🇸 +1 USA / Canada</option>
+            <option value="44">🇬🇧 +44 Royaume-Uni</option>
+            <option value="32">🇧🇪 +32 Belgique</option>
+            <option value="34">🇪🇸 +34 Espagne</option>
+            <option value="39">🇮🇹 +39 Italie</option>
+            <option value="49">🇩🇪 +49 Allemagne</option>
+            <option value="212">🇲🇦 +212 Maroc</option>
+            <option value="213">🇩🇿 +213 Algérie</option>
+            <option value="216">🇹🇳 +216 Tunisie</option>
+            <option value="223">🇲🇱 +223 Mali</option>
+            <option value="224">🇬🇳 +224 Guinée</option>
+            <option value="225">🇨🇮 +225 Côte d'Ivoire</option>
+            <option value="226">🇧🇫 +226 Burkina Faso</option>
+            <option value="227">🇳🇪 +227 Niger</option>
+            <option value="228">🇹🇬 +228 Togo</option>
+            <option value="229">🇧🇯 +229 Bénin</option>
+            <option value="230">🇲🇺 +230 Maurice</option>
+            <option value="233">🇬🇭 +233 Ghana</option>
+            <option value="234">🇳🇬 +234 Nigeria</option>
+            <option value="237">🇨🇲 +237 Cameroun</option>
+            <option value="241">🇬🇦 +241 Gabon</option>
+            <option value="242">🇨🇬 +242 Congo</option>
+            <option value="243">🇨🇩 +243 RD Congo</option>
+            <option value="971">🇦🇪 +971 Émirats Arabes Unis</option>
+            <option value="966">🇸🇦 +966 Arabie Saoudite</option>
+            <option value="86">🇨🇳 +86 Chine</option>
+            <option value="91">🇮🇳 +91 Inde</option>
+          </select>
+          <input type="tel" name="telephoneNombre" placeholder="77 000 00 00" required>
+        </div>
       </label>
       <label>Ville / Pays
         <input type="text" name="ville" required>
@@ -798,9 +848,12 @@
 
       const articles = articlesACommander || panier;
 
+      const chiffresTel = form.telephoneNombre.value.replace(/\D/g, "").replace(/^0+/, "");
+      const telephoneComplet = form.indicatif.value + chiffresTel;
+
       const client = {
         nom: form.nom.value,
-        telephone: form.telephone.value,
+        telephone: telephoneComplet,
         ville: form.ville.value,
         adresse: form.adresse.value,
       };
