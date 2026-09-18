@@ -129,6 +129,45 @@
       color: #888;
       font-size: 0.9rem;
     }
+
+    @media (max-width: 600px) {
+      header {
+        flex-wrap: wrap;
+        padding: 10px 14px;
+        row-gap: 8px;
+      }
+      .logo-img {
+        height: 42px;
+      }
+      .nav-liens {
+        gap: 12px;
+      }
+      .nav-liens a {
+        font-size: 0.8rem;
+      }
+      #btn-deconnexion {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+      }
+      .conteneur {
+        margin: 16px auto;
+        padding: 0 12px;
+      }
+      .carte {
+        padding: 16px;
+      }
+      .grille-mes-produits {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+      }
+      .carte-commande {
+        padding: 12px;
+      }
+      .pied-commande {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+    }
   </style>
 </head>
 <body>

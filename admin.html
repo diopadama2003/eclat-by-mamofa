@@ -42,6 +42,40 @@
     .statut-select { padding: 5px 6px; border-radius: 6px; border: 1px solid #ddd; font-size: 0.82rem; }
     .liste-articles { margin: 0; padding-left: 16px; }
     .vide { padding: 16px; color: #888; font-size: 0.9rem; }
+
+    @media (max-width: 600px) {
+      header {
+        flex-wrap: wrap;
+        padding: 10px 14px;
+        row-gap: 8px;
+      }
+      .logo-img {
+        height: 42px;
+      }
+      .nav-liens {
+        gap: 12px;
+      }
+      .nav-liens a {
+        font-size: 0.8rem;
+      }
+      #btn-deconnexion {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+      }
+      .conteneur {
+        margin: 16px auto;
+        padding: 0 12px;
+      }
+      .carte {
+        padding: 16px;
+      }
+      table {
+        font-size: 0.8rem;
+      }
+      thead th, tbody td {
+        padding: 8px;
+      }
+    }
   </style>
 </head>
 <body>

@@ -33,6 +33,33 @@
     .lien-bascule { text-align: center; margin-top: 14px; font-size: 0.9rem; }
     .lien-bascule a { color: #D6336C; cursor: pointer; text-decoration: underline; }
     .message { font-size: 0.9rem; font-weight: bold; min-height: 20px; margin-top: 10px; }
+
+    @media (max-width: 600px) {
+      header {
+        flex-wrap: wrap;
+        padding: 10px 14px;
+        row-gap: 8px;
+      }
+      .logo-img {
+        height: 42px;
+      }
+      .nav-liens {
+        gap: 12px;
+      }
+      .nav-liens a {
+        font-size: 0.8rem;
+      }
+      .conteneur {
+        margin: 20px auto;
+        padding: 18px;
+      }
+      .ligne-tel {
+        flex-direction: column;
+      }
+      .ligne-tel select {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -145,7 +172,6 @@
       messageEl.style.color = "#222";
       messageEl.textContent = "Création du compte...";
 
-      // Nettoyer le numéro (enlever espaces, tirets, et le 0 initial) et le combiner avec l'indicatif
       const chiffres = form.telephoneNombre.value.replace(/\D/g, "").replace(/^0+/, "");
       const whatsappComplet = form.indicatif.value + chiffres;
 
