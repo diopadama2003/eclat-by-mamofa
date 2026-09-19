@@ -200,6 +200,16 @@
       margin: 0 0 4px;
     }
 
+    .carte-note {
+      font-size: 0.78rem;
+      color: var(--or-fonce);
+      margin: 0 0 4px;
+    }
+    .carte-note .nb-avis {
+      color: #999;
+      font-weight: normal;
+    }
+
     .prix {
       color: var(--or-fonce);
       font-weight: bold;
@@ -485,6 +495,98 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
 
+    /* ===== Avis ===== */
+    .separation-avis {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 22px 0 16px;
+    }
+    .titre-avis {
+      font-size: 1rem;
+      font-weight: bold;
+      margin: 0 0 10px;
+    }
+    .avis-moyenne {
+      font-size: 1rem;
+      color: var(--or-fonce);
+      margin-bottom: 12px;
+    }
+    .avis-moyenne .nb-avis {
+      color: #888;
+      font-weight: normal;
+      font-size: 0.85rem;
+    }
+    .carte-avis {
+      background: #FBF8F1;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      font-size: 0.88rem;
+    }
+    .carte-avis .entete-avis {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+    .carte-avis .etoiles-avis {
+      color: var(--or);
+      letter-spacing: 1px;
+    }
+    .carte-avis .commentaire-avis {
+      color: #444;
+    }
+    .pas-avis {
+      color: #888;
+      font-size: 0.88rem;
+      margin-bottom: 10px;
+    }
+
+    .etoiles-input {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+    .etoiles-input input {
+      display: none;
+    }
+    .etoiles-input label {
+      font-size: 1.8rem;
+      color: #ddd;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    .etoiles-input input:checked ~ label,
+    .etoiles-input label:hover,
+    .etoiles-input label:hover ~ label {
+      color: var(--or);
+    }
+
+    #form-avis input[type="text"],
+    #form-avis textarea {
+      width: 100%;
+      padding: 9px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 0.9rem;
+      font-family: Arial, sans-serif;
+    }
+    #form-avis button {
+      width: 100%;
+      background: var(--marine);
+      color: white;
+      border: none;
+      padding: 11px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
     /* ===== Responsive mobile ===== */
     @media (max-width: 600px) {
       header {
@@ -698,6 +800,26 @@
         Commander
       </button>
       <button class="btn-detail-panier" id="btn-detail-panier">🧺 Ajouter au panier</button>
+
+      <hr class="separation-avis">
+      <p class="titre-avis">Avis clients</p>
+      <div class="avis-moyenne" id="avis-moyenne"></div>
+      <div id="liste-avis"></div>
+
+      <p class="titre-avis">Laisser un avis</p>
+      <form id="form-avis">
+        <input type="text" name="nomAvis" placeholder="Ton nom" required>
+        <div class="etoiles-input">
+          <input type="radio" name="note" value="5" id="etoile5"><label for="etoile5">★</label>
+          <input type="radio" name="note" value="4" id="etoile4"><label for="etoile4">★</label>
+          <input type="radio" name="note" value="3" id="etoile3"><label for="etoile3">★</label>
+          <input type="radio" name="note" value="2" id="etoile2"><label for="etoile2">★</label>
+          <input type="radio" name="note" value="1" id="etoile1"><label for="etoile1">★</label>
+        </div>
+        <textarea name="commentaire" rows="3" placeholder="Ton avis sur ce produit..." required></textarea>
+        <button type="submit">Envoyer mon avis</button>
+      </form>
+      <p class="message" id="message-avis"></p>
     </div>
   </div>
 
@@ -709,6 +831,7 @@
 
   <script>
     let TOUS_LES_PRODUITS = [];
+    let AVIS_PAR_PRODUIT = {};
     let categorieActive = "tous";
     let termeRecherche = "";
     let panier = [];
@@ -733,6 +856,32 @@
       return Number(montant).toLocaleString("fr-FR") + " F CFA";
     }
 
+    function etoilesTexte(moyenne) {
+      const arrondi = Math.round(moyenne);
+      return "★".repeat(arrondi) + "☆".repeat(5 - arrondi);
+    }
+
+    function infosAvis(produitId) {
+      const avis = AVIS_PAR_PRODUIT[produitId] || [];
+      if (avis.length === 0) return { moyenne: 0, count: 0 };
+      const somme = avis.reduce((s, a) => s + Number(a.note), 0);
+      return { moyenne: somme / avis.length, count: avis.length };
+    }
+
+    // Charger les avis en temps réel
+    db.collection("avis").orderBy("date", "desc").onSnapshot((snapshot) => {
+      const nouveauMap = {};
+      snapshot.docs.forEach((doc) => {
+        const a = doc.data();
+        if (!nouveauMap[a.produitId]) nouveauMap[a.produitId] = [];
+        nouveauMap[a.produitId].push(a);
+      });
+      AVIS_PAR_PRODUIT = nouveauMap;
+      afficherProduits();
+      if (produitAffiche) afficherAvisProduit(produitAffiche.id);
+    });
+
+    // Charger les produits depuis Firestore, en temps réel
     db.collection("produits").orderBy("dateAjout", "desc").onSnapshot(
       (snapshot) => {
         TOUS_LES_PRODUITS = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -776,21 +925,23 @@
       }
 
       grille.innerHTML = produits
-        .map(
-          (p) => `
+        .map((p) => {
+          const { moyenne, count } = infosAvis(p.id);
+          return `
         <div class="carte-produit">
           <img src="${p.image}" alt="${p.nom}" loading="lazy" class="ouvre-detail" data-id="${p.id}">
           <div class="carte-produit-info ouvre-detail" data-id="${p.id}">
             <p class="carte-vendeur">${p.nomVendeur || "Vendeur"}</p>
             <p>${p.nom}</p>
+            <p class="carte-note">${etoilesTexte(moyenne)} <span class="nb-avis">(${count})</span></p>
             <p class="prix">${formatFCFA(p.prix)}</p>
             <div class="boutons-produit">
               <button class="btn-commander-direct" data-id="${p.id}">${ICONE_WA}Commander</button>
               <button class="btn-ajouter" data-id="${p.id}">🧺</button>
             </div>
           </div>
-        </div>`
-        )
+        </div>`;
+        })
         .join("");
 
       grille.querySelectorAll(".btn-ajouter").forEach((btn) => {
@@ -812,6 +963,67 @@
       });
     }
 
+    function afficherAvisProduit(produitId) {
+      const { moyenne, count } = infosAvis(produitId);
+      const avis = AVIS_PAR_PRODUIT[produitId] || [];
+
+      document.getElementById("avis-moyenne").innerHTML =
+        count > 0
+          ? `${etoilesTexte(moyenne)} <span class="nb-avis">${moyenne.toFixed(1)}/5 — ${count} avis</span>`
+          : `<span class="nb-avis">Aucun avis pour l'instant</span>`;
+
+      const listeAvisEl = document.getElementById("liste-avis");
+      if (avis.length === 0) {
+        listeAvisEl.innerHTML = "";
+      } else {
+        listeAvisEl.innerHTML = avis
+          .map(
+            (a) => `
+          <div class="carte-avis">
+            <div class="entete-avis">
+              <span>${a.nomClient}</span>
+              <span class="etoiles-avis">${"★".repeat(a.note)}${"☆".repeat(5 - a.note)}</span>
+            </div>
+            <p class="commentaire-avis">${a.commentaire}</p>
+          </div>`
+          )
+          .join("");
+      }
+    }
+
+    document.getElementById("form-avis").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const messageEl = document.getElementById("message-avis");
+      const noteCochee = form.querySelector('input[name="note"]:checked');
+
+      if (!noteCochee) {
+        messageEl.style.color = "#D6336C";
+        messageEl.textContent = "Choisis une note en étoiles.";
+        return;
+      }
+      if (!produitAffiche) return;
+
+      try {
+        await db.collection("avis").add({
+          produitId: produitAffiche.id,
+          produitNom: produitAffiche.nom,
+          nomClient: form.nomAvis.value,
+          note: Number(noteCochee.value),
+          commentaire: form.commentaire.value,
+          date: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        messageEl.style.color = "green";
+        messageEl.textContent = "Merci pour ton avis !";
+        form.reset();
+        setTimeout(() => (messageEl.textContent = ""), 2500);
+      } catch (err) {
+        console.error(err);
+        messageEl.style.color = "#D6336C";
+        messageEl.textContent = "Erreur lors de l'envoi de l'avis.";
+      }
+    });
+
     function ouvrirDetailProduit(id) {
       const produit = TOUS_LES_PRODUITS.find((p) => p.id === id);
       if (!produit) return;
@@ -821,6 +1033,10 @@
       document.getElementById("produit-vendeur").textContent = produit.nomVendeur || "Vendeur";
       document.getElementById("produit-nom").textContent = produit.nom;
       document.getElementById("produit-prix").textContent = formatFCFA(produit.prix);
+
+      document.getElementById("form-avis").reset();
+      document.getElementById("message-avis").textContent = "";
+      afficherAvisProduit(produit.id);
 
       modalProduit.classList.add("ouvert");
       overlay.classList.add("visible");
@@ -961,7 +1177,7 @@
         parVendeur[cle].articles.push(l);
       });
 
-            Object.entries(parVendeur).forEach(([whatsapp, groupe]) => {
+      Object.entries(parVendeur).forEach(([whatsapp, groupe]) => {
         if (whatsapp === "inconnu") return;
         const recap = groupe.articles.map((l) => `- ${l.quantite}x ${l.nom} (${formatFCFA(l.prix)})`).join("\n");
         const sousTotal = groupe.articles.reduce((s, l) => s + l.prix * l.quantite, 0);
