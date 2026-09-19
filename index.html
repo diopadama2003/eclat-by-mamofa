@@ -961,16 +961,20 @@
         parVendeur[cle].articles.push(l);
       });
 
-      Object.entries(parVendeur).forEach(([whatsapp, groupe]) => {
+            Object.entries(parVendeur).forEach(([whatsapp, groupe]) => {
         if (whatsapp === "inconnu") return;
         const recap = groupe.articles.map((l) => `- ${l.quantite}x ${l.nom} (${formatFCFA(l.prix)})`).join("\n");
         const sousTotal = groupe.articles.reduce((s, l) => s + l.prix * l.quantite, 0);
         const message =
-          `Nouvelle commande Éclat by Mamofa\n` +
-          `Client: ${client.nom} (${client.telephone})\n` +
-          `Livraison: ${client.adresse}, ${client.ville}\n\n` +
-          `Articles:\n${recap}\n\n` +
-          `Sous-total: ${formatFCFA(sousTotal)}`;
+          `Bonjour ${groupe.nomVendeur || ""} 👋\n\n` +
+          `Je suis intéressé(e) par vos produits sur Éclat by Mamofa et j'aimerais passer une commande.\n\n` +
+          `Mes coordonnées :\n` +
+          `- Nom : ${client.nom}\n` +
+          `- Téléphone : ${client.telephone}\n` +
+          `- Livraison : ${client.adresse}, ${client.ville}\n\n` +
+          `Articles souhaités :\n${recap}\n\n` +
+          `Sous-total : ${formatFCFA(sousTotal)}\n\n` +
+          `Merci beaucoup ! 🙏`;
         window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`, "_blank");
       });
 
