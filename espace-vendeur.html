@@ -105,18 +105,16 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
     }
-    .badge-statut {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: bold;
-      padding: 3px 10px;
-      border-radius: 10px;
+    .statut-select {
+      padding: 5px 8px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 0.82rem;
+      background: white;
     }
-    .badge-statut.attente { background: #FEEBC8; color: #975A16; }
-    .badge-statut.confirmee { background: #BEE3F8; color: #2A4365; }
-    .badge-statut.livraison { background: #E9D8FD; color: #553C9A; }
-    .badge-statut.livree { background: #C6F6D5; color: #22543D; }
     .btn-suppr-commande {
       background: none;
       color: #D6336C;
@@ -224,6 +222,7 @@
 
   <script>
     const IMGBB_API_KEY = "205f355eb54fb27d85eb89fcb0ea69c5";
+    const STATUTS_COMMANDE = ["en attente", "confirmée", "en livraison", "livrée"];
 
     let vendeurConnecte = null;
 
@@ -406,13 +405,6 @@
         });
     }
 
-    function classeStatut(statut) {
-      if (statut === "confirmée") return "confirmee";
-      if (statut === "en livraison") return "livraison";
-      if (statut === "livrée") return "livree";
-      return "attente";
-    }
-
     function chargerMesCommandes() {
       db.collection("commandes")
         .where("vendeurIds", "array-contains", vendeurConnecte.uid)
@@ -436,7 +428,10 @@
               const mesArticles = (c.articles || []).filter((a) => a.vendeurId === vendeurConnecte.uid);
               const items = mesArticles.map((a) => `<li>${a.quantite}x ${a.nom}</li>`).join("");
               const sousTotal = mesArticles.reduce((s, a) => s + a.prix * a.quantite, 0);
-              const statut = c.statut || "en attente";
+              const statutActuel = c.statut || "en attente";
+              const options = STATUTS_COMMANDE.map(
+                (s) => `<option value="${s}" ${s === statutActuel ? "selected" : ""}>${s}</option>`
+              ).join("");
               return `
               <div class="carte-commande">
                 <div class="entete">
@@ -449,12 +444,18 @@
                 <div class="livraison">📍 ${c.client?.adresse || ""}, ${c.client?.ville || ""}</div>
                 <ul>${items}</ul>
                 <div class="pied-commande">
-                  <span class="badge-statut ${classeStatut(statut)}">${statut}</span>
+                  <select class="statut-select" data-id="${doc.id}">${options}</select>
                   <button class="btn-suppr-commande" data-suppr-cmd="${doc.id}">Retirer de ma liste</button>
                 </div>
               </div>`;
             })
             .join("");
+
+          liste.querySelectorAll(".statut-select").forEach((select) => {
+            select.addEventListener("change", async () => {
+              await db.collection("commandes").doc(select.dataset.id).update({ statut: select.value });
+            });
+          });
 
           liste.querySelectorAll("button[data-suppr-cmd]").forEach((btn) => {
             btn.addEventListener("click", async () => {
