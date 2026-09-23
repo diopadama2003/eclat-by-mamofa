@@ -20,7 +20,25 @@
     button { background: #16213E; color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; }
     button:disabled { opacity: 0.6; cursor: not-allowed; }
     .message { font-size: 0.9rem; font-weight: bold; min-height: 20px; }
-    .apercu-image { max-width: 120px; max-height: 120px; border-radius: 8px; margin-top: 8px; display: none; }
+
+    .aide-champ {
+      font-weight: normal;
+      color: #888;
+      font-size: 0.78rem;
+    }
+    .apercus-multiples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .apercus-multiples img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
 
     .grille-mes-produits {
       display: grid;
@@ -193,9 +211,9 @@
         <label>Catégorie
           <input type="text" name="categorie" required placeholder="Alimentation, Vêtements, Parfums...">
         </label>
-        <label>Photo du produit
-          <input type="file" name="image" accept="image/*" required id="champ-image">
-          <img id="apercu-image" class="apercu-image">
+        <label>Photos du produit <span class="aide-champ">(tu peux en choisir plusieurs à la fois, ex: chaque couleur/variante)</span>
+          <input type="file" name="images" accept="image/*" required id="champ-image" multiple>
+          <div id="apercus-multiples" class="apercus-multiples"></div>
         </label>
         <button type="submit" id="btn-publier">Publier le produit</button>
       </form>
@@ -301,16 +319,17 @@
     });
 
     const champImage = document.getElementById("champ-image");
-    const apercuImage = document.getElementById("apercu-image");
+    const apercusMultiples = document.getElementById("apercus-multiples");
     champImage.addEventListener("change", () => {
-      const fichier = champImage.files[0];
-      if (fichier) {
-        apercuImage.src = URL.createObjectURL(fichier);
-        apercuImage.style.display = "block";
-      }
+      apercusMultiples.innerHTML = "";
+      Array.from(champImage.files).forEach((fichier) => {
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(fichier);
+        apercusMultiples.appendChild(img);
+      });
     });
 
-    async function envoyerPhoto(fichier) {
+    async function envoyerUnePhoto(fichier) {
       const formData = new FormData();
       formData.append("image", fichier);
       const reponse = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
@@ -318,7 +337,7 @@
         body: formData,
       });
       const data = await reponse.json();
-      if (!data.success) throw new Error("Échec de l'envoi de la photo");
+      if (!data.success) throw new Error("Échec de l'envoi d'une photo");
       return data.data.url;
     }
 
@@ -327,20 +346,25 @@
       const form = e.target;
       const messageEl = document.getElementById("message-produit");
       const boutonPublier = document.getElementById("btn-publier");
-      const fichier = champImage.files[0];
+      const fichiers = Array.from(champImage.files);
 
-      if (!fichier) {
+      if (fichiers.length === 0) {
         messageEl.style.color = "#D6336C";
-        messageEl.textContent = "Choisis une photo.";
+        messageEl.textContent = "Choisis au moins une photo.";
         return;
       }
 
       boutonPublier.disabled = true;
       messageEl.style.color = "#222";
-      messageEl.textContent = "Envoi de la photo...";
+      messageEl.textContent = `Envoi de la photo 1/${fichiers.length}...`;
 
       try {
-        const lienImage = await envoyerPhoto(fichier);
+        const urlsImages = [];
+        for (let i = 0; i < fichiers.length; i++) {
+          messageEl.textContent = `Envoi de la photo ${i + 1}/${fichiers.length}...`;
+          const url = await envoyerUnePhoto(fichiers[i]);
+          urlsImages.push(url);
+        }
 
         messageEl.textContent = "Publication du produit...";
 
@@ -351,7 +375,8 @@
           nom: form.nom.value,
           prix: Number(form.prix.value),
           categorie: form.categorie.value,
-          image: lienImage,
+          image: urlsImages[0],
+          images: urlsImages,
           vendeurId: vendeurConnecte.uid,
           nomVendeur: vendeurData.nomVendeur,
           whatsappVendeur: vendeurData.whatsapp,
@@ -361,7 +386,7 @@
         messageEl.style.color = "green";
         messageEl.textContent = "Produit publié !";
         form.reset();
-        apercuImage.style.display = "none";
+        apercusMultiples.innerHTML = "";
       } catch (err) {
         console.error(err);
         messageEl.style.color = "#D6336C";
