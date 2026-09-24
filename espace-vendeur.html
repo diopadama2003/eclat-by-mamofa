@@ -39,6 +39,24 @@
       border-radius: 8px;
       border: 1px solid #ddd;
     }
+        .apercu-avec-suppr {
+      position: relative;
+    }
+    .btn-suppr-apercu {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #D6336C;
+      color: white;
+      border: none;
+      font-size: 0.7rem;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+    }
 
     .grille-mes-produits {
       display: grid;
@@ -318,15 +336,33 @@
       auth.signOut().then(() => (window.location.href = "vendeur.html"));
     });
 
-    const champImage = document.getElementById("champ-image");
+        const champImage = document.getElementById("champ-image");
     const apercusMultiples = document.getElementById("apercus-multiples");
-    champImage.addEventListener("change", () => {
-      apercusMultiples.innerHTML = "";
-      Array.from(champImage.files).forEach((fichier) => {
-        const img = document.createElement("img");
-        img.src = URL.createObjectURL(fichier);
-        apercusMultiples.appendChild(img);
+    let fichiersSelectionnes = [];
+
+    function afficherApercusMultiples() {
+      apercusMultiples.innerHTML = fichiersSelectionnes
+        .map(
+          (fichier, i) => `
+          <div class="apercu-avec-suppr">
+            <img src="${URL.createObjectURL(fichier)}">
+            <button type="button" class="btn-suppr-apercu" data-index="${i}">✕</button>
+          </div>`
+        )
+        .join("");
+
+      apercusMultiples.querySelectorAll(".btn-suppr-apercu").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          fichiersSelectionnes.splice(Number(btn.dataset.index), 1);
+          afficherApercusMultiples();
+        });
       });
+    }
+
+    champImage.addEventListener("change", () => {
+      fichiersSelectionnes = fichiersSelectionnes.concat(Array.from(champImage.files));
+      afficherApercusMultiples();
+      champImage.value = ""; // permet de resélectionner sans perdre ce qui est déjà ajouté
     });
 
     async function envoyerUnePhoto(fichier) {
@@ -346,7 +382,7 @@
       const form = e.target;
       const messageEl = document.getElementById("message-produit");
       const boutonPublier = document.getElementById("btn-publier");
-      const fichiers = Array.from(champImage.files);
+      const fichiers = fichiersSelectionnes;
 
       if (fichiers.length === 0) {
         messageEl.style.color = "#D6336C";
@@ -383,9 +419,10 @@
           dateAjout: firebase.firestore.FieldValue.serverTimestamp(),
         });
 
-        messageEl.style.color = "green";
+         messageEl.style.color = "green";
         messageEl.textContent = "Produit publié !";
         form.reset();
+        fichiersSelectionnes = [];
         apercusMultiples.innerHTML = "";
       } catch (err) {
         console.error(err);
