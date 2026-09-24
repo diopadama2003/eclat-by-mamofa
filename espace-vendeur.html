@@ -39,7 +39,7 @@
       border-radius: 8px;
       border: 1px solid #ddd;
     }
-        .apercu-avec-suppr {
+    .apercu-avec-suppr {
       position: relative;
     }
     .btn-suppr-apercu {
@@ -230,7 +230,7 @@
           <input type="text" name="categorie" required placeholder="Alimentation, Vêtements, Parfums...">
         </label>
         <label>Photos du produit <span class="aide-champ">(tu peux en choisir plusieurs à la fois, ex: chaque couleur/variante)</span>
-          <input type="file" name="images" accept="image/*" required id="champ-image" multiple>
+          <input type="file" name="images" accept="image/*" id="champ-image" multiple>
           <div id="apercus-multiples" class="apercus-multiples"></div>
         </label>
         <button type="submit" id="btn-publier">Publier le produit</button>
@@ -336,7 +336,7 @@
       auth.signOut().then(() => (window.location.href = "vendeur.html"));
     });
 
-        const champImage = document.getElementById("champ-image");
+    const champImage = document.getElementById("champ-image");
     const apercusMultiples = document.getElementById("apercus-multiples");
     let fichiersSelectionnes = [];
 
@@ -362,7 +362,7 @@
     champImage.addEventListener("change", () => {
       fichiersSelectionnes = fichiersSelectionnes.concat(Array.from(champImage.files));
       afficherApercusMultiples();
-      champImage.value = ""; // permet de resélectionner sans perdre ce qui est déjà ajouté
+      champImage.value = "";
     });
 
     async function envoyerUnePhoto(fichier) {
@@ -419,7 +419,7 @@
           dateAjout: firebase.firestore.FieldValue.serverTimestamp(),
         });
 
-         messageEl.style.color = "green";
+        messageEl.style.color = "green";
         messageEl.textContent = "Produit publié !";
         form.reset();
         fichiersSelectionnes = [];
