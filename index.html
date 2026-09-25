@@ -431,6 +431,24 @@
       background: #f0ede6;
       display: block;
     }
+    .miniatures-produit {
+      display: flex;
+      gap: 8px;
+      padding: 10px 24px 0;
+      overflow-x: auto;
+    }
+    .miniature-produit {
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      flex-shrink: 0;
+    }
+    .miniature-produit.active {
+      border-color: var(--or);
+    }
     .modal-produit-corps {
       padding: 20px 24px 30px;
       max-width: 480px;
@@ -791,6 +809,7 @@
   <div class="modal modal-produit" id="modal-produit">
     <button id="fermer-modal-produit">✕</button>
     <img id="produit-img" class="modal-produit-img" alt="">
+    <div class="miniatures-produit" id="miniatures-produit"></div>
     <div class="modal-produit-corps">
       <p class="modal-produit-vendeur" id="produit-vendeur"></p>
       <p class="modal-produit-nom" id="produit-nom"></p>
@@ -868,7 +887,6 @@
       return { moyenne: somme / avis.length, count: avis.length };
     }
 
-    // Charger les avis en temps réel
     db.collection("avis").orderBy("date", "desc").onSnapshot((snapshot) => {
       const nouveauMap = {};
       snapshot.docs.forEach((doc) => {
@@ -881,7 +899,6 @@
       if (produitAffiche) afficherAvisProduit(produitAffiche.id);
     });
 
-    // Charger les produits depuis Firestore, en temps réel
     db.collection("produits").orderBy("dateAjout", "desc").onSnapshot(
       (snapshot) => {
         TOUS_LES_PRODUITS = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -1029,10 +1046,27 @@
       if (!produit) return;
       produitAffiche = produit;
 
-      document.getElementById("produit-img").src = produit.image;
+      const photos = (produit.images && produit.images.length > 0) ? produit.images : [produit.image];
+      document.getElementById("produit-img").src = photos[0];
       document.getElementById("produit-vendeur").textContent = produit.nomVendeur || "Vendeur";
       document.getElementById("produit-nom").textContent = produit.nom;
       document.getElementById("produit-prix").textContent = formatFCFA(produit.prix);
+
+      const miniaturesEl = document.getElementById("miniatures-produit");
+      if (photos.length > 1) {
+        miniaturesEl.innerHTML = photos
+          .map((url, i) => `<img src="${url}" class="miniature-produit ${i === 0 ? "active" : ""}" data-src="${url}">`)
+          .join("");
+        miniaturesEl.querySelectorAll(".miniature-produit").forEach((mini) => {
+          mini.addEventListener("click", () => {
+            document.getElementById("produit-img").src = mini.dataset.src;
+            miniaturesEl.querySelectorAll(".miniature-produit").forEach((m) => m.classList.remove("active"));
+            mini.classList.add("active");
+          });
+        });
+      } else {
+        miniaturesEl.innerHTML = "";
+      }
 
       document.getElementById("form-avis").reset();
       document.getElementById("message-avis").textContent = "";
@@ -1169,7 +1203,6 @@
       };
       const total = articles.reduce((s, l) => s + l.prix * l.quantite, 0);
 
-      // Ouvrir WhatsApp tout de suite (avant l'enregistrement) pour eviter le blocage popup du navigateur
       const parVendeur = {};
       articles.forEach((l) => {
         const cle = l.whatsappVendeur || "inconnu";
