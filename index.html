@@ -6,10 +6,15 @@
   <title>Éclat by Mamofa</title>
   <style>
     :root {
-      --or: #D4AF37;
-      --or-fonce: #B8941F;
-      --marine: #16213E;
-      --marine-clair: #1F2E52;
+      --dore: #C9A227;
+      --dore-fonce: #A9861E;
+      --bleu: #0A1628;
+      --bleu-clair: #142238;
+      /* alias pour compatibilité interne */
+      --or: #C9A227;
+      --or-fonce: #A9861E;
+      --marine: #0A1628;
+      --marine-clair: #142238;
     }
 
     body {
@@ -20,13 +25,12 @@
     }
 
     header {
-      background: var(--marine);
+      background: var(--bleu);
       color: white;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 12px 25px;
-      border-bottom: 2px solid var(--or);
     }
 
     .logo-lien {
@@ -56,12 +60,12 @@
       transition: color 0.2s;
     }
     .nav-liens a:hover {
-      color: var(--or);
+      color: var(--dore);
     }
 
     header button {
-      background: var(--or);
-      color: var(--marine);
+      background: var(--dore);
+      color: var(--bleu);
       border: none;
       padding: 9px 16px;
       border-radius: 20px;
@@ -70,7 +74,7 @@
     }
 
     .hero {
-      background: linear-gradient(160deg, var(--marine) 0%, var(--marine-clair) 100%);
+      background: linear-gradient(160deg, var(--bleu) 0%, var(--bleu-clair) 100%);
       color: white;
       text-align: center;
       padding: 55px 20px 50px;
@@ -81,7 +85,7 @@
       font-size: 0.8rem;
       letter-spacing: 3px;
       text-transform: uppercase;
-      color: var(--or);
+      color: var(--dore);
       margin: 0 0 10px;
       font-weight: bold;
     }
@@ -96,14 +100,14 @@
     .hero-sous-titre {
       margin: 0;
       font-size: 1.05rem;
-      color: var(--or);
+      color: var(--dore);
       font-style: italic;
     }
 
     .hero .trait-or {
       width: 70px;
       height: 3px;
-      background: var(--or);
+      background: var(--dore);
       margin: 16px auto 20px;
       border-radius: 2px;
     }
@@ -131,7 +135,7 @@
     }
     #recherche:focus {
       outline: none;
-      border-color: var(--or);
+      border-color: var(--dore);
     }
 
     .categories {
@@ -149,9 +153,9 @@
     }
 
     .chip.active {
-      background: var(--marine);
-      color: var(--or);
-      border-color: var(--or);
+      background: var(--bleu);
+      color: var(--dore);
+      border-color: var(--dore);
       font-weight: bold;
     }
 
@@ -181,16 +185,50 @@
       transform: translateY(-2px);
     }
 
-    .carte-produit img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      background: #eee;
+    .zone-images-carte {
+      display: flex;
+      gap: 6px;
+      padding: 8px;
       cursor: pointer;
+    }
+    .zone-images-carte .img-principale {
+      flex: 1;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 6px;
+      background: #eee;
+      min-width: 0;
+    }
+    .colonne-miniatures {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 46px;
+      flex-shrink: 0;
+    }
+    .colonne-miniatures img {
+      width: 46px;
+      height: 46px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #eee;
+      background: #eee;
+    }
+    .miniature-plus {
+      width: 46px;
+      height: 46px;
+      border-radius: 6px;
+      background: var(--bleu);
+      color: var(--dore);
+      font-size: 0.72rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .carte-produit-info {
-      padding: 12px;
+      padding: 0 12px 12px;
       cursor: pointer;
     }
 
@@ -202,7 +240,7 @@
 
     .carte-note {
       font-size: 0.78rem;
-      color: var(--or-fonce);
+      color: var(--dore-fonce);
       margin: 0 0 4px;
     }
     .carte-note .nb-avis {
@@ -211,7 +249,7 @@
     }
 
     .prix {
-      color: var(--or-fonce);
+      color: var(--dore-fonce);
       font-weight: bold;
       margin: 8px 0;
     }
@@ -223,9 +261,9 @@
     }
     .btn-commander-direct {
       flex: 1;
-      background: var(--marine);
-      color: var(--or);
-      border: 1px solid var(--or);
+      background: var(--bleu);
+      color: var(--dore);
+      border: 1px solid var(--dore);
       padding: 8px 10px;
       border-radius: 20px;
       cursor: pointer;
@@ -237,7 +275,7 @@
       gap: 5px;
     }
     .btn-ajouter {
-      background: var(--marine);
+      background: var(--bleu);
       color: white;
       border: none;
       padding: 8px 10px;
@@ -301,8 +339,8 @@
 
     #btn-commander {
       width: 100%;
-      background: var(--or);
-      color: var(--marine);
+      background: var(--dore);
+      color: var(--bleu);
       border: none;
       padding: 12px;
       border-radius: 8px;
@@ -447,7 +485,7 @@
       flex-shrink: 0;
     }
     .miniature-produit.active {
-      border-color: var(--or);
+      border-color: var(--dore);
     }
     .modal-produit-corps {
       padding: 20px 24px 30px;
@@ -465,7 +503,7 @@
       margin: 0 0 8px;
     }
     .modal-produit-prix {
-      color: var(--or-fonce);
+      color: var(--dore-fonce);
       font-weight: bold;
       font-size: 1.4rem;
       margin: 0 0 20px;
@@ -490,8 +528,8 @@
       display: block;
       width: 100%;
       background: none;
-      color: var(--marine);
-      border: 1px solid var(--marine);
+      color: var(--bleu);
+      border: 1px solid var(--bleu);
       padding: 13px;
       border-radius: 8px;
       font-weight: bold;
@@ -526,7 +564,7 @@
     }
     .avis-moyenne {
       font-size: 1rem;
-      color: var(--or-fonce);
+      color: var(--dore-fonce);
       margin-bottom: 12px;
     }
     .avis-moyenne .nb-avis {
@@ -549,7 +587,7 @@
       margin-bottom: 3px;
     }
     .carte-avis .etoiles-avis {
-      color: var(--or);
+      color: var(--dore);
       letter-spacing: 1px;
     }
     .carte-avis .commentaire-avis {
@@ -580,7 +618,7 @@
     .etoiles-input input:checked ~ label,
     .etoiles-input label:hover,
     .etoiles-input label:hover ~ label {
-      color: var(--or);
+      color: var(--dore);
     }
 
     #form-avis input[type="text"],
@@ -596,7 +634,7 @@
     }
     #form-avis button {
       width: 100%;
-      background: var(--marine);
+      background: var(--bleu);
       color: white;
       border: none;
       padding: 11px;
@@ -607,19 +645,29 @@
 
     /* ===== A propos ===== */
     .apropos-strip {
-      background: var(--marine);
+      background: var(--bleu);
       color: white;
       text-align: center;
       padding: 34px 20px;
-      border-top: 1px solid rgba(212,175,55,0.3);
     }
-    .apropos-titre {
-      color: var(--or);
+    .titre-decor {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      color: var(--dore);
       text-transform: uppercase;
       letter-spacing: 2px;
       font-size: 0.8rem;
       font-weight: bold;
-      margin: 0 0 10px;
+      margin: 0 0 14px;
+    }
+    .titre-decor::before,
+    .titre-decor::after {
+      content: "";
+      height: 1px;
+      width: 40px;
+      background: var(--dore);
     }
     .apropos-texte {
       max-width: 560px;
@@ -631,7 +679,7 @@
 
     /* ===== Footer ===== */
     .pied-page {
-      background: var(--marine-clair);
+      background: var(--bleu-clair);
       color: #D8DCEA;
       padding: 30px 20px 16px;
     }
@@ -643,7 +691,7 @@
       gap: 30px;
       justify-content: space-between;
       padding-bottom: 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.12);
+      border-bottom: 1px solid rgba(201,162,39,0.3);
     }
     .pied-marque {
       max-width: 320px;
@@ -661,7 +709,7 @@
       margin: 0;
     }
     .pied-titre {
-      color: var(--or);
+      color: var(--dore);
       font-weight: bold;
       font-size: 0.8rem;
       text-transform: uppercase;
@@ -679,13 +727,20 @@
       font-size: 0.88rem;
     }
     .pied-liens a:hover {
-      color: var(--or);
+      color: var(--dore);
     }
     .pied-copyright {
       text-align: center;
       font-size: 0.78rem;
       color: #8890A8;
       margin: 16px 0 0;
+    }
+    .pied-diamant {
+      text-align: center;
+      color: var(--dore);
+      font-size: 0.7rem;
+      margin-top: 8px;
+      transform: rotate(0deg);
     }
 
     /* ===== Bouton remonter en haut ===== */
@@ -696,8 +751,8 @@
       width: 46px;
       height: 46px;
       border-radius: 50%;
-      background: var(--or);
-      color: var(--marine);
+      background: var(--dore);
+      color: var(--bleu);
       border: none;
       font-size: 1.3rem;
       font-weight: bold;
@@ -762,11 +817,16 @@
         gap: 14px;
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
       }
-      .carte-produit img {
-        height: 130px;
+      .colonne-miniatures {
+        width: 38px;
+      }
+      .colonne-miniatures img,
+      .miniature-plus {
+        width: 38px;
+        height: 38px;
       }
       .carte-produit-info {
-        padding: 10px;
+        padding: 0 10px 10px;
       }
       .boutons-produit {
         flex-wrap: wrap;
@@ -852,7 +912,7 @@
   <div class="grille-produits" id="grille-produits"></div>
 
   <section class="apropos-strip" id="apropos">
-    <p class="apropos-titre">À propos</p>
+    <p class="titre-decor">À propos</p>
     <p class="apropos-texte">Éclat by Mamofa est une plateforme de mode, beauté et parfums sélectionnés avec soin. Notre mission est de rendre l'élégance accessible partout.</p>
   </section>
 
@@ -871,6 +931,7 @@
       </div>
     </div>
     <p class="pied-copyright">© 2026 Éclat by Mamofa — Tous droits réservés.</p>
+    <p class="pied-diamant">◆</p>
   </footer>
 
   <button id="btn-haut" aria-label="Remonter en haut">↑</button>
@@ -1088,9 +1149,24 @@
       grille.innerHTML = produits
         .map((p) => {
           const { moyenne, count } = infosAvis(p.id);
+          const photos = (p.images && p.images.length > 0) ? p.images : [p.image];
+          const miniaturesCote = photos.slice(1, 3);
+          const resteCombien = photos.length - 3;
+
+          let blocMiniatures = "";
+          if (photos.length > 1) {
+            blocMiniatures = `<div class="colonne-miniatures">` +
+              miniaturesCote.map((url) => `<img src="${url}" loading="lazy">`).join("") +
+              (resteCombien > 0 ? `<div class="miniature-plus">+${resteCombien}</div>` : "") +
+              `</div>`;
+          }
+
           return `
         <div class="carte-produit">
-          <img src="${p.image}" alt="${p.nom}" loading="lazy" class="ouvre-detail" data-id="${p.id}">
+          <div class="zone-images-carte ouvre-detail" data-id="${p.id}">
+            <img src="${photos[0]}" alt="${p.nom}" loading="lazy" class="img-principale">
+            ${blocMiniatures}
+          </div>
           <div class="carte-produit-info ouvre-detail" data-id="${p.id}">
             <p class="carte-vendeur">${p.nomVendeur || "Vendeur"}</p>
             <p>${p.nom}</p>
