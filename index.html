@@ -605,6 +605,114 @@
       cursor: pointer;
     }
 
+    /* ===== A propos ===== */
+    .apropos-strip {
+      background: var(--marine);
+      color: white;
+      text-align: center;
+      padding: 34px 20px;
+      border-top: 1px solid rgba(212,175,55,0.3);
+    }
+    .apropos-titre {
+      color: var(--or);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin: 0 0 10px;
+    }
+    .apropos-texte {
+      max-width: 560px;
+      margin: 0 auto;
+      color: #D8DCEA;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    /* ===== Footer ===== */
+    .pied-page {
+      background: var(--marine-clair);
+      color: #D8DCEA;
+      padding: 30px 20px 16px;
+    }
+    .pied-page-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: space-between;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+    .pied-marque {
+      max-width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .pied-logo {
+      height: 38px;
+    }
+    .pied-marque p {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #B7BCD1;
+      margin: 0;
+    }
+    .pied-titre {
+      color: var(--or);
+      font-weight: bold;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 0 0 10px;
+    }
+    .pied-liens {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .pied-liens a {
+      color: #D8DCEA;
+      text-decoration: none;
+      font-size: 0.88rem;
+    }
+    .pied-liens a:hover {
+      color: var(--or);
+    }
+    .pied-copyright {
+      text-align: center;
+      font-size: 0.78rem;
+      color: #8890A8;
+      margin: 16px 0 0;
+    }
+
+    /* ===== Bouton remonter en haut ===== */
+    #btn-haut {
+      position: fixed;
+      bottom: 24px;
+      right: 20px;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--or);
+      color: var(--marine);
+      border: none;
+      font-size: 1.3rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      z-index: 95;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    #btn-haut.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     /* ===== Responsive mobile ===== */
     @media (max-width: 600px) {
       header {
@@ -697,6 +805,18 @@
       .modal-produit-prix {
         font-size: 1.2rem;
       }
+
+      .pied-page-inner {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      #btn-haut {
+        bottom: 16px;
+        right: 14px;
+        width: 42px;
+        height: 42px;
+      }
     }
   </style>
 </head>
@@ -730,6 +850,30 @@
 
   <p class="etat" id="etat-chargement">Chargement des produits...</p>
   <div class="grille-produits" id="grille-produits"></div>
+
+  <section class="apropos-strip" id="apropos">
+    <p class="apropos-titre">À propos</p>
+    <p class="apropos-texte">Éclat by Mamofa est une plateforme de mode, beauté et parfums sélectionnés avec soin. Notre mission est de rendre l'élégance accessible partout.</p>
+  </section>
+
+  <footer class="pied-page">
+    <div class="pied-page-inner">
+      <div class="pied-marque">
+        <img src="image/logo.png" alt="Éclat by Mamofa" class="pied-logo">
+        <p>L'élégance. Le choix. La confiance.<br>Bien plus qu'une boutique, une expérience.</p>
+      </div>
+      <div class="pied-liens">
+        <p class="pied-titre">Liens rapides</p>
+        <a href="index.html">Accueil</a>
+        <a href="#apropos">À propos</a>
+        <a href="#">Contact</a>
+        <a href="vendeur.html">Devenir vendeur</a>
+      </div>
+    </div>
+    <p class="pied-copyright">© 2026 Éclat by Mamofa — Tous droits réservés.</p>
+  </footer>
+
+  <button id="btn-haut" aria-label="Remonter en haut">↑</button>
 
   <!-- Panneau panier -->
   <div class="panneau-panier" id="panneau-panier">
@@ -1252,6 +1396,19 @@
         console.error(err);
         alert("Erreur lors de l'envoi de la commande.");
       }
+    });
+
+    // Bouton remonter en haut
+    const btnHaut = document.getElementById("btn-haut");
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 400) {
+        btnHaut.classList.add("visible");
+      } else {
+        btnHaut.classList.remove("visible");
+      }
+    });
+    btnHaut.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
   </script>
 
