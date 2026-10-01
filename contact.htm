@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Éclat by Mamofa — Contact</title>
+  <style>
+    :root {
+      --dore: #C9A227;
+      --dore-fonce: #A9861E;
+      --bleu: #0A1628;
+      --bleu-clair: #142238;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bleu);
+      color: #222;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      color: white;
+    }
+    header a.retour {
+      color: var(--dore);
+      font-size: 1.3rem;
+      text-decoration: none;
+    }
+    header .titre-header {
+      color: var(--dore);
+      font-family: Georgia, 'Times New Roman', serif;
+      font-weight: bold;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+    header .lien-contact {
+      color: white;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .intro {
+      text-align: center;
+      color: white;
+      padding: 10px 24px 30px;
+    }
+    .intro h1 {
+      font-size: 2rem;
+      margin: 6px 0 10px;
+    }
+    .titre-decor {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      color: var(--dore);
+      font-weight: bold;
+      font-size: 0.95rem;
+      margin: 0 0 16px;
+    }
+    .titre-decor::before,
+    .titre-decor::after {
+      content: "";
+      height: 1px;
+      width: 50px;
+      background: var(--dore);
+    }
+    .intro p.texte {
+      max-width: 420px;
+      margin: 0 auto;
+      color: #D8DCEA;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .carte-formulaire {
+      background: white;
+      border-radius: 14px;
+      max-width: 480px;
+      margin: 0 auto 30px;
+      padding: 26px 24px;
+    }
+    .carte-formulaire label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: bold;
+      margin-bottom: 16px;
+      color: #222;
+    }
+    .carte-formulaire input,
+    .carte-formulaire select,
+    .carte-formulaire textarea {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 0.92rem;
+      font-family: Arial, sans-serif;
+    }
+    .carte-formulaire textarea {
+      resize: vertical;
+    }
+    .compteur-caracteres {
+      text-align: right;
+      font-size: 0.75rem;
+      color: #999;
+      font-weight: normal;
+      margin-top: 4px;
+    }
+    .btn-envoyer {
+      width: 100%;
+      background: linear-gradient(135deg, var(--dore) 0%, var(--dore-fonce) 100%);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .coordonnees {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 10px 24px 40px;
+      color: white;
+    }
+    .coordonnees .titre-decor {
+      margin-bottom: 20px;
+    }
+    .ligne-coordonnee {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(201,162,39,0.2);
+    }
+    .ligne-coordonnee:last-child {
+      border-bottom: none;
+    }
+    .icone-coordonnee {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1.5px solid var(--dore);
+      color: var(--dore);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.1rem;
+    }
+    .texte-coordonnee .label-coordonnee {
+      font-weight: bold;
+      font-size: 0.92rem;
+      margin: 0 0 2px;
+    }
+    .texte-coordonnee .valeur-coordonnee {
+      font-size: 0.88rem;
+      color: #D8DCEA;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="retour">←</a>
+    <span class="titre-header">ÉCLAT BY MAMOFA</span>
+    <a href="contact.html" class="lien-contact">Contact</a>
+  </header>
+
+  <section class="intro">
+    <h1>Contactez-nous</h1>
+    <p class="titre-decor">Nous sommes à votre écoute</p>
+    <p class="texte">Une question sur un produit, une commande ou pour devenir vendeur ? Écrivez-nous, nous vous répondons sous 24h.</p>
+  </section>
+
+  <div class="carte-formulaire">
+    <form id="form-contact">
+      <label>Nom complet
+        <input type="text" name="nom" placeholder="Votre nom complet" required>
+      </label>
+      <label>Email
+        <input type="email" name="email" placeholder="Votre adresse email" required>
+      </label>
+      <label>Téléphone
+        <input type="tel" name="telephone" placeholder="Votre numéro de téléphone" required>
+      </label>
+      <label>Sujet
+        <select name="sujet" required>
+          <option value="" disabled selected>Sélectionnez un sujet</option>
+          <option value="Question sur un produit">Question sur un produit</option>
+          <option value="Suivi de commande">Suivi de commande</option>
+          <option value="Devenir vendeur">Devenir vendeur</option>
+          <option value="Autre">Autre</option>
+        </select>
+      </label>
+      <label>Votre message
+        <textarea name="message" rows="4" maxlength="500" placeholder="Écrivez votre message ici..." required></textarea>
+        <div class="compteur-caracteres"><span id="compteur">0</span>/500</div>
+      </label>
+      <button type="submit" class="btn-envoyer">
+        Envoyer le message
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+      </button>
+    </form>
+  </div>
+
+  <div class="coordonnees">
+    <p class="titre-decor">Nos coordonnées</p>
+
+    <div class="ligne-coordonnee">
+      <div class="icone-coordonnee">✉</div>
+      <div class="texte-coordonnee">
+        <p class="label-coordonnee">Email</p>
+        <p class="valeur-coordonnee">diopadams5@gmail.com</p>
+      </div>
+    </div>
+
+    <div class="ligne-coordonnee">
+      <div class="icone-coordonnee">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="currentColor"><path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.386.633 4.62 1.735 6.555L4 29l7.634-1.703A11.94 11.94 0 0 0 16.001 27C22.628 27 28 21.627 28 15S22.628 3 16.001 3zm.001 21.818c-1.94 0-3.76-.51-5.34-1.4l-.383-.22-4.53 1.01 1.03-4.41-.25-.4A9.77 9.77 0 0 1 5.2 15c0-5.394 4.407-9.8 9.8-9.8s9.8 4.406 9.8 9.8-4.406 9.818-9.798 9.818zm5.373-7.34c-.295-.148-1.744-.86-2.014-.958-.27-.099-.467-.148-.664.148-.197.295-.762.958-.934 1.155-.172.197-.344.222-.639.074-.295-.148-1.246-.459-2.373-1.463-.877-.782-1.469-1.75-1.641-2.045-.172-.295-.018-.454.13-.601.134-.133.295-.344.443-.517.148-.172.197-.295.295-.492.099-.197.05-.369-.025-.517-.074-.148-.664-1.6-.91-2.19-.24-.577-.483-.5-.664-.51h-.567c-.197 0-.517.074-.788.369-.27.295-1.032 1.01-1.032 2.46s1.057 2.855 1.204 3.052c.148.197 2.08 3.176 5.04 4.454.704.304 1.253.486 1.681.622.706.225 1.348.193 1.856.117.566-.084 1.744-.712 1.99-1.4.246-.688.246-1.278.172-1.4-.074-.123-.27-.197-.566-.344z"/></svg>
+      </div>
+      <div class="texte-coordonnee">
+        <p class="label-coordonnee">WhatsApp</p>
+        <p class="valeur-coordonnee">+221 77 20 32 740</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CONTACT_WHATSAPP = "221772032740";
+
+    const champMessage = document.querySelector('textarea[name="message"]');
+    const compteur = document.getElementById("compteur");
+    champMessage.addEventListener("input", () => {
+      compteur.textContent = champMessage.value.length;
+    });
+
+    document.getElementById("form-contact").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const form = e.target;
+
+      const texte =
+        `Nouveau message de contact — Éclat by Mamofa\n\n` +
+        `Nom : ${form.nom.value}\n` +
+        `Email : ${form.email.value}\n` +
+        `Téléphone : ${form.telephone.value}\n` +
+        `Sujet : ${form.sujet.value}\n\n` +
+        `Message :\n${form.message.value}`;
+
+      window.open(`https://wa.me/${CONTACT_WHATSAPP}?text=${encodeURIComponent(texte)}`, "_blank");
+
+      form.reset();
+      compteur.textContent = "0";
+    });
+  </script>
+
+</body>
+</html>
